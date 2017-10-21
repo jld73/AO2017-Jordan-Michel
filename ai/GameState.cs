@@ -7,30 +7,45 @@ namespace ai
 {
     public class GameState
     {
-        private Map map;
+        public Map map;
         private List<Worker> workers;
         private List<Scout> scouts;
         private List<Tank> tanks;
         private List<Worker> enemyworkers;
         private List<Scout> enemyscouts;
         private List<Tank> enemytanks;
-        
-        
+        private List<Resource> resources;
+
+        public Resource GetBestResource()
+        {
+            Resource best = resources[0];
+            foreach (Resource r in resources)
+            {
+                if (r.priority > best.priority)
+                {
+                    best = r;
+                }
+            }
+            return best;
+        }
+
 
     }
 
-    class Map
+    public class Map
     {
+        private GameState game;
         private Tile[,] tilemap;
 
-        public Map()
+        public Map(GameState game)
         {
             tilemap = new Tile[60, 60];
+            this.game = game;
         }
 
         public Tile getTile(int x, int y)
         {
-            return tilemap[x, y];
+            return tilemap[x + 30, y + 30];
         }
         // Gets tile adjecent to the provided tile
         public Tile getAdj(Tile t, char dir)
@@ -50,10 +65,39 @@ namespace ai
             }
             return null;
         }
+
+        public double distance(Tile t1, Tile t2)
+        {
+            // TODO: use a* to get the distance
+            return Math.Sqrt(Math.Pow(t2.x - t1.x, 2) + Math.Pow(t2.y - t1.y, 2));
+        }
+
+        public double distance(int x1, int y1, int x2, int y2)
+        {
+            return distance(getTile(x1, y1), getTile(x2, y2));
+        }
+
+        public char PathNext(int x1, int x2, int y1, int y2)
+        {
+            Tile t1 = getTile(x1, y1);
+            Tile t2 = getTile(x2, y2);
+            HashSet<Tile> open;
+            HashSet<Tile> closed;
+            int[,] gScore = new int[60, 60];
+            for (int x = 0; x < 60; x++)
+            {
+                for (int y = 0; y < 60; y++)
+                {
+                    gScore[x, y] = Int32.MaxValue;
+                }
+            }
+            int[,] fScore = new int[60, 60];
+            return 's';
+        }
         
     }
 
-    class Tile
+    public class Tile
     {
         public int x, y;
         private bool wall;
@@ -64,6 +108,8 @@ namespace ai
     class Unit
     {
         public enum State {idle, moving}
+
+        private GameState game;
         
         // This unit's position
         private int x, y;
@@ -85,19 +131,29 @@ namespace ai
 
         private void executeCommand()
         {
-            cmd.execute();
+            cmd.execute(game, this, x, y);
         }
     }
 
-    class Resource
+    public class Resource
     {
+        private GameState game;
         public int x, y;
-        private int id;
+        public int id;
+        public int amount;
+        public double priority;
+
+        public Resource(GameState game, int x, int y)
+        {
+            this.game = game;
+            priority = game.map.distance(x, y, 0, 0);
+        }
 
     }
 
     class Worker : Unit
     {
+        public int resourceValue;
         
     }
 
@@ -113,7 +169,30 @@ namespace ai
 
     abstract class Command
     {
-        public abstract void execute();
+        private GameState game;
+
+        public Command(GameState game)
+        {
+            this.game = game;
+        }
+        public abstract void execute(GameState game, Unit caller, int x, int y);
+
+    }
+
+    class GatherCommand : Command
+    {
+        private bool full;
+        public override void execute(GameState game, Unit caller, int x, int y)
+        {
+            if (((Worker)caller).resourceValue == 0)
+            {
+                
+            }
+        }
+
+        public GatherCommand(GameState game) : base(game)
+        {
+        }
 
     }
     
