@@ -73,17 +73,17 @@ namespace ai
             return tilemap[x + 30, y + 30];
         }
         // Gets tile adjecent to the provided tile
-        public Tile getAdj(Tile t, char dir)
+        public Tile getAdj(Tile t, int dir)
         {
             switch (dir)
             {
-                case 'N':
+                case 0:
                     return tilemap[t.x, t.y + 1];
-                case 'E':
+                case 1:
                     return tilemap[t.x + 1, t.y];
-                case 'S':
+                case 2:
                     return tilemap[t.x, t.y - 1];
-                case 'W':
+                case 3:
                     return tilemap[t.x - 1, t.y];
                 default:
                     throw new Exception("Invalid Direction");
@@ -102,12 +102,14 @@ namespace ai
             return distance(getTile(x1, y1), getTile(x2, y2));
         }
 
-        public char PathNext(int x1, int x2, int y1, int y2)
+        public string getPath(int x1, int x2, int y1, int y2)
         {
             int mapW = game.mapW * 2;
             int mapH = game.mapH * 2;
             Tile t1 = getTile(x1, y1);
             Tile t2 = getTile(x2, y2);
+
+            char[,] cameFrom = new char[mapW, mapH];
             HashSet<Tile> open = new HashSet<Tile>();
             open.Add(getTile(x1, y1));
             HashSet<Tile> closed = new HashSet<Tile>();
@@ -130,16 +132,61 @@ namespace ai
             }
             fScore[t1.x, t1.y] = distance(t1, t2);
             
+            
             while (open.Count > 0)
             {
+                Tile current = null;
+                foreach (Tile t in open)
+                {
+                    if (current == null)
+                    {
+                        current = t;
+                    }
+                    else
+                    {
+                        if (fScore[t.x, t.y] < fScore[current.x, current.y])
+                        {
+                            current = t;
+                        }
+                    }
+                    
+                }
+                if (current.x == x2 && current.y == y2)
+                {
+                    string s = "";
+                    while (current.x != x1 && current.y != y1)
+                    {
+                        s += cameFrom[current.x, current.y].ToString();
+                        current = getAdj(current, cameFrom[current.x, current.y]);
+                    }
+                    return s;
+                }
+                open.Remove(current);
+                closed.Add(current);
+
+                for (int i = 0; i < 3; i++)
+                {
+                    Tile neighbor = getAdj(current, i);
+                    if (closed.Contains(neighbor) || neighbor == null)
+                    {
+                        continue;
+                    } else if (!open.Contains(neighbor))
+                    {
+                        open.Add(neighbor);
+                    }
+                    int g = gScore[current.x, current.y] + 1;
+                    if (g > gScore[neighbor.x, neighbor.y])
+                    {
+                        gScore[neighbor.x, neighbor.y] = g;
+                    }
+
+                }
                 
+
+
             }
-            
-            
-            
-            
-            
-            return 's';
+
+            return "";
         }
         
     }
@@ -147,7 +194,7 @@ namespace ai
     public class Tile
     {
         public int x, y;
-        private bool wall;
+        private bool blocked;
         private bool visible;
 
     }
