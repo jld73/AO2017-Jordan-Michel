@@ -15,8 +15,9 @@ namespace ai
 
         public string GoJson(string line)
         {
+            // Json message is converted into something else. I don't know what because the var isn't typed
             var gameMessage = JsonConvert.DeserializeObject<GameMessage>(line);
-            
+            // Calls go
             var commandSet = Go(gameMessage);
 
             return JsonConvert.SerializeObject(commandSet)+"\n";
