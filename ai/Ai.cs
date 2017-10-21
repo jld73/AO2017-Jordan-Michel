@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -44,6 +45,7 @@ namespace ai
         public IList<TileUpdate> Tile_Updates { get; set; }
         public int Turn  { get; set; }
         public int Time  { get; set; }
+        public GameInfo Game_Info { get; set; }
     }
 
     public class UnitUpdate
@@ -59,31 +61,45 @@ namespace ai
         public int Range { get; set; }
         public int Speed { get; set; }
         public int Resource { get; set; }
-        public int Attack_Dammage { get; set; }
-        public int Attact_Cooldown_Duration { get; set; }
-        public int Attack_Cooldown  { get; set; }
-        public string Attack_Type  { get; set; }
     }
 
     public class TileUpdate
     {
-        public string Visible  { get; set; }
-        public int X  { get; set; }
-        public int Y  { get; set; }
-        public bool Blocked  { get; set; }
-       //public IList<ResourceUpdate> Resources { get; set; }
+        public bool Visible { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool Blocked { get; set; }
+        public TileResource Resources { get; set; }
+        public IList<EnemyUnit> Units { get; set; }
     }
 
-    /*
-    public class ResourceUpdate
+    public class TileResource
     {
         public int Id { get; set; }
         public string Type { get; set; }
         public int Total { get; set; }
         public int Value { get; set; }
     }
-    */
-    
+
+    public class EnemyUnit
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public string Status { get; set; }
+        public int Player_Id { get; set; }
+        public int Health { get; set; }
+    }
+
+    public class GameInfo
+    {
+        public int Map_Width { get; set; }
+        public int Map_Height { get; set; }
+        public int Game_Duration { get; set; }
+
+        public int Turn_Duration { get; set; }
+
+    }
+
     public class CommandSet
     {
         public IEnumerable<GameCommand> commands;
