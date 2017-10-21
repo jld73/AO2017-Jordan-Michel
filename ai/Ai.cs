@@ -8,10 +8,12 @@ namespace ai
 {
     public class Ai
     {
+        private GameState game;
         private Random rand = new Random();
         private HashSet<int> knownUnits = new HashSet<int>();
         public Ai()
         {
+            GameState game = new GameState();
         }
 
         public string GoJson(string line)

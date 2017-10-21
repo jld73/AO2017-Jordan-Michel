@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Transactions;
 
 namespace ai
 {
     public class GameState
     {
-        
+        public int playerId;
         public int mapW, mapH;
         public Map map;
         private List<Worker> workers;
@@ -17,6 +18,7 @@ namespace ai
         private List<Scout> enemyscouts;
         private List<Tank> enemytanks;
         private List<Resource> resources;
+        private bool started = false;
 
         public Resource GetBestResource()
         {
@@ -29,6 +31,27 @@ namespace ai
                 }
             }
             return best;
+        }
+
+        public GameState()
+        {
+            started = false;
+        }
+
+        public void Update(GameMessage game)
+        {
+            // handle initial setup
+            if (started == false)
+            {
+                playerId = game.Player;
+                mapW = game.Game_Info.Map_Width;
+                mapH = game.Game_Info.Map_Height;
+                started = true;
+            }
+            
+            // handling other changes
+            
+            
         }
 
 
