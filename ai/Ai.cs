@@ -41,15 +41,49 @@ namespace ai
     {
         public int Player { get; set; }
         public IList<UnitUpdate> Unit_Updates { get; set; }
+        public IList<TileUpdate> Tile_Updates { get; set; }
+        public int Turn  { get; set; }
+        public int Time  { get; set; }
     }
 
     public class UnitUpdate
     {
         public int Id { get; set; }
         public int Player_Id { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
         public string Status { get; set; }
+        public string Type { get; set; }
+        public int Health { get; set; }
+        public bool Can_Attack { get; set; }
+        public int Range { get; set; }
+        public int Speed { get; set; }
+        public int Resource { get; set; }
+        public int Attack_Dammage { get; set; }
+        public int Attact_Cooldown_Duration { get; set; }
+        public int Attack_Cooldown  { get; set; }
+        public string Attack_Type  { get; set; }
     }
 
+    public class TileUpdate
+    {
+        public string Visible  { get; set; }
+        public int X  { get; set; }
+        public int Y  { get; set; }
+        public bool Blocked  { get; set; }
+       //public IList<ResourceUpdate> Resources { get; set; }
+    }
+
+    /*
+    public class ResourceUpdate
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public int Total { get; set; }
+        public int Value { get; set; }
+    }
+    */
+    
     public class CommandSet
     {
         public IEnumerable<GameCommand> commands;
