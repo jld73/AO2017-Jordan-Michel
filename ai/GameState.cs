@@ -7,6 +7,8 @@ namespace ai
 {
     public class GameState
     {
+        
+        public int mapW, mapH;
         public Map map;
         private List<Worker> workers;
         private List<Scout> scouts;
@@ -79,19 +81,41 @@ namespace ai
 
         public char PathNext(int x1, int x2, int y1, int y2)
         {
+            int mapW = game.mapW * 2;
+            int mapH = game.mapH * 2;
             Tile t1 = getTile(x1, y1);
             Tile t2 = getTile(x2, y2);
-            HashSet<Tile> open;
-            HashSet<Tile> closed;
-            int[,] gScore = new int[60, 60];
-            for (int x = 0; x < 60; x++)
+            HashSet<Tile> open = new HashSet<Tile>();
+            open.Add(getTile(x1, y1));
+            HashSet<Tile> closed = new HashSet<Tile>();
+            int[,] gScore = new int[mapW, mapH];
+            for (int x = 0; x < mapW; x++)
             {
-                for (int y = 0; y < 60; y++)
+                for (int y = 0; y < mapH; y++)
                 {
                     gScore[x, y] = Int32.MaxValue;
                 }
             }
-            int[,] fScore = new int[60, 60];
+            gScore[t1.x, t1.y] = 0;
+            double[,] fScore = new double[mapW, mapH];
+            for (int x = 0; x < mapW; x++)
+            {
+                for (int y = 0; y < mapH; y++)
+                {
+                    fScore[x, y] = Int32.MaxValue;
+                }
+            }
+            fScore[t1.x, t1.y] = distance(t1, t2);
+            
+            while (open.Count > 0)
+            {
+                
+            }
+            
+            
+            
+            
+            
             return 's';
         }
         
